@@ -19,3 +19,4 @@ end
 sts = cell2mat(sts);
 
 y = sparse(sts(sts <= nT), 1, 1, nT, 1);
+y = full(y);

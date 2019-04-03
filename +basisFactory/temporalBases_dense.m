@@ -31,9 +31,11 @@ BX = zeros(T, sum(sI) + addDC);
 
 sI = cumsum(sI); k = 1;
 for kCov = 1:dx
-    A = conv2(X(:,kCov), bases(:,indices(kCov,:)));
-    BX(:, k:sI(kCov)) = A(1:T,:); %1:end-(nB-1));
-    
+    for kb = 1:M
+%     A = conv2([zeros(TB-1,1); X(:,kCov)], rot90((bases(:,kb)),2), 'valid');
+    A = conv2([zeros(TB-1,1); X(:,kCov)], bases(:,kb), 'valid');
+    BX(:, k + kb-1) = A(1:T,:); %1:end-(nB-1));
+    end
     k = sI(kCov) + 1;
 end
 

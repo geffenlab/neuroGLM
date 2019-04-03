@@ -35,7 +35,8 @@ switch nargout
 	    L = Inf; % if rate is 0, nothing else can happen
 	else
 	    L = -y(nzidx)'*log(f(nzidx)) + sum(f); % neg log-likelihood
-	end
+    end
+    
     case 2
         [f,df] = fnlin(xproj); % evaluate nonlinearity
 
@@ -47,6 +48,7 @@ switch nargout
 	end
         
         dL = x(nzidx, :)' * ((1 - y(nzidx)./f(nzidx)) .* df(nzidx));
+        
     case 3
         [f,df,ddf] = fnlin(xproj); % evaluate nonlinearity
 

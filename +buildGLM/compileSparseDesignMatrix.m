@@ -6,13 +6,13 @@ subIdxs = buildGLM.getGroupIndicesFromDesignSpec(dspec);
 
 totalT = sum(ceil([expt.trial(trialIndices).duration]/expt.binSize));
 
-growingX = sparse([], [], [], 0, dspec.edim, round(totalT * dspec.edim * 0.001)); % preallocate
+% growingX = sparse([], [], [], 0, dspec.edim, round(totalT * dspec.edim * 0.001)); % preallocate
 
 trialIndices = trialIndices(:)';
-
+growingX = zeros(totalT, dspec.edim); 
+lastT = 0;
 for kTrial = trialIndices
     nT = ceil(expt.trial(kTrial).duration / expt.binSize); % TODO move?
-    
     miniX = zeros(nT, dspec.edim); % pre-allocate a dense matrix for each trial
     
     for kCov = 1:numel(dspec.covar) % for each covariate
@@ -31,10 +31,11 @@ for kTrial = trialIndices
             miniX(:, sidx) = stim;
         end
     end
-    growingX = [growingX; sparse(miniX)]; %#ok<AGROW>
+    growingX(lastT + (1:nT),:) = full(miniX);
+    lastT = lastT + nT;
 end
 
-dm.X = growingX;
+dm.X = full(growingX);
 dm.trialIndices = trialIndices;
 dm.dspec = dspec;
 

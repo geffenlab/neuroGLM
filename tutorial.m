@@ -29,7 +29,7 @@ bs = basisFactory.makeSmoothTemporalBasis('boxcar', 100, 10, binfun);
 bs.B = 0.1 * bs.B;
 
 %% Instantaneous Raw Signal without basis
-dspec = buildGLM.addCovariateRaw(dspec, 'LFP', [], bs);
+% dspec = buildGLM.addCovariateRaw(dspec, 'LFP', [], bs);
 
 %% Spike history
 dspec = buildGLM.addCovariateSpiketrain(dspec, 'hist', 'sptrain', 'History filter');
@@ -59,7 +59,7 @@ dspec = buildGLM.addCovariateRaw(dspec, 'eyepos', [], bs);
 %buildGLM.summarizeDesignSpec(dspec); % print out the current configuration
 
 %% Compile the data into 'DesignMatrix' structure
-trialIndices = 1:10; %(nTrials-1); % use all trials except the last one
+trialIndices = 1:(nTrials-1); % use all trials except the last one
 dm = buildGLM.compileSparseDesignMatrix(dspec, trialIndices);
 
 %% Visualize the design matrix
@@ -71,12 +71,13 @@ figure(742); clf; imagesc(X);
 %buildGLM.visualizeDesignMatrix(dm, 1); % optionally plot the first trial
 
 %% Get the spike trains back to regress against
-y = buildGLM.getBinnedSpikeTrain(expt, 'sptrain', dm.trialIndices);
+% y = buildGLM.getBinnedSpikeTrain(expt, 'sptrain', dm.trialIndices);
+y = buildGLM.getResponseVariable(expt, 'LFP', dm.trialIndices);
 
 %% Do some processing on the design matrix
 dm = buildGLM.removeConstantCols(dm);
-colIndices = buildGLM.getDesignMatrixColIndices(dspec, 'LFP');
-dm = buildGLM.zscoreDesignMatrix(dm, [colIndices{:}]);
+% colIndices = buildGLM.getDesignMatrixColIndices(dspec, 'LFP');
+% dm = buildGLM.zscoreDesignMatrix(dm, [colIndices{:}]);
 
 dm = buildGLM.addBiasColumn(dm); % DO NOT ADD THE BIAS TERM IF USING GLMFIT
 

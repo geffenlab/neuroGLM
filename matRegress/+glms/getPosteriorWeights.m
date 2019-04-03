@@ -8,8 +8,8 @@ if ~exist('distr', 'var')
 end
 
 
-opts = optimoptions(@fminunc, 'Display', 'off', 'Algorithm','trust-region',...
-    'GradObj','on','Hessian','on');
+opts = optimoptions(@fminunc, 'Display', 'iter', 'Algorithm','trust-region',...
+    'GradObj','on','Hessian','on','FunctionTolerance',0.2);
 
 argOpts  = {'link', 'CV', 'bulk', 'opts', 'DC'};
 dfltOpts = {'canonical', false, false, opts, true};
